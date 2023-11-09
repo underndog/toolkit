@@ -30,8 +30,8 @@ RUN apt-get update && apt-get install -y \
 RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 RUN sudo apt-get install apt-transport-https --yes
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-RUN sudo apt-get update
-RUN sudo apt-get install helm
+RUN apt-get update
+RUN apt-get install helm
 
 # Install eksctl
 ENV EKSCTL_VERSION=v0.164.0
