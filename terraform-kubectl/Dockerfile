@@ -39,6 +39,11 @@ RUN PLATFORM=$(uname -s)_$ARCH && \
     tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz && \
     mv /tmp/eksctl /usr/local/bin
 
+
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
+
 # Cleanup
 RUN apt-get remove --purge -y curl unzip && \
     apt-get autoremove -y && \
@@ -50,6 +55,8 @@ RUN terraform --version
 RUN kubectl version --client
 RUN git --version
 RUN helm version
+RUN aws --version
+RUN eksctl version
 
 # Command to keep the container running
 CMD ["/bin/bash"]
