@@ -1,5 +1,5 @@
 # Use the Debian image as the base
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Maintainer and author label
 LABEL maintainer="Nimtechnology"
