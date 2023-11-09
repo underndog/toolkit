@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     git \
-    sudo \
     ca-certificates \
     --no-install-recommends && \
     # Install Terraform
@@ -38,7 +37,7 @@ RUN PLATFORM=$(uname -s)_$ARCH && \
     curl -sLO "https://github.com/eksctl-io/eksctl/releases/download/$EKSCTL_VERSION/eksctl_$PLATFORM.tar.gz" && \
     curl -sL "https://github.com/eksctl-io/eksctl/releases/download/$EKSCTL_VERSION/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check && \
     tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz && \
-    sudo mv /tmp/eksctl /usr/local/bin
+    mv /tmp/eksctl /usr/local/bin
 
 # Cleanup
 RUN apt-get remove --purge -y curl unzip && \
