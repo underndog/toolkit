@@ -39,7 +39,7 @@ RUN PLATFORM=$(uname -s)_$ARCH && \
     tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz && \
     mv /tmp/eksctl /usr/local/bin
 
-
+# Install aws-cli
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install
