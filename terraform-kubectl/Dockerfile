@@ -5,7 +5,7 @@ FROM debian:bullseye-slim
 LABEL maintainer="Nimtechnology"
 
 # Set versions for tools to install
-ENV TERRAFORM_VERSION=1.0.5
+ENV TERRAFORM_VERSION=1.6.3
 ENV KUBECTL_VERSION=v1.22.0
 
 # Install necessary utilities and tools
