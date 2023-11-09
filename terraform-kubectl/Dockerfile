@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     git \
+    sudo \
     ca-certificates \
     --no-install-recommends && \
     # Install Terraform
