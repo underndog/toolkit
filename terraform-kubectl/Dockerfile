@@ -5,8 +5,9 @@ FROM debian:bookworm-slim
 LABEL maintainer="Nimtechnology"
 
 # Set versions for tools to install
-ENV TERRAFORM_VERSION=1.6.3
-ENV KUBECTL_VERSION=v1.22.0
+ENV TERRAFORM_VERSION=1.7.5
+##How to check the latest version of kubectl: https://dl.k8s.io/release/stable.txt
+ENV KUBECTL_VERSION=v1.29.3
 
 # Install necessary utilities and tools
 RUN apt-get update && apt-get install -y \
