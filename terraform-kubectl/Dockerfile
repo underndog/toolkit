@@ -49,14 +49,15 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 # Install Docker CLI with a dynamically determined Debian codename
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg lsb-release && \
-    # Retrieve the Debian codename and add Docker's official GPG key and repository
-    DEBIAN_CODENAME=$(lsb_release -cs) && \
+    apt-get install -y ca-certificates curl gnupg && \
+    # Determine the Debian codename dynamically
+    DEBIAN_CODENAME=$( (lsb_release -cs 2>/dev/null || grep -oP '^VERSION_CODENAME=\K.*' /etc/os-release) ) && \
+    # Add Docker's official GPG key and repository using the Debian codename
     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $DEBIAN_CODENAME stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     # Install Docker CLI using the specified version and Debian codename
-    apt-get install -y docker-ce-cli=$DOCKER_VERSION~$DEBIAN_CODENAME
+    apt-get install -y docker-ce-cli=${DOCKER_VERSION}~${DEBIAN_CODENAME} && \
 
 # Cleanup
 RUN apt-get remove --purge -y curl unzip && \
