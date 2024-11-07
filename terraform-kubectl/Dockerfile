@@ -47,7 +47,6 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     unzip awscliv2.zip && \
     ./aws/install
 
-# Install docker CE
 # Install Docker CLI with the specified version on Debian
 RUN apt-get update && \
     apt-get install -y ca-certificates curl gnupg lsb-release && \
