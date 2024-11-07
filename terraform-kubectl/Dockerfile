@@ -9,7 +9,7 @@ ENV TERRAFORM_VERSION=1.7.5
 ##How to check the latest version of kubectl: https://dl.k8s.io/release/stable.txt
 ENV KUBECTL_VERSION=v1.29.3
 # Set Docker version as an environment variable
-ENV DOCKER_VERSION=5:23.0.3~3-0~debian-$(lsb_release -cs)
+ENV DOCKER_VERSION=5:23.0.3~3-0~debian
 
 # Install necessary utilities and tools
 RUN apt-get update && apt-get install -y \
@@ -47,16 +47,16 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     unzip awscliv2.zip && \
     ./aws/install
 
-# Install Docker CLI with the specified version on Debian
+# Install Docker CLI with a dynamically determined Debian codename
 RUN apt-get update && \
     apt-get install -y ca-certificates curl gnupg lsb-release && \
-    # Add Docker's official GPG key
+    # Retrieve the Debian codename and add Docker's official GPG key and repository
+    DEBIAN_CODENAME=$(lsb_release -cs) && \
     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
-    # Add Docker APT repository
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $DEBIAN_CODENAME stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
-    # Install Docker CLI using the specified version from the environment variable
-    apt-get install -y docker-ce-cli=$DOCKER_VERSION && \
+    # Install Docker CLI using the specified version and Debian codename
+    apt-get install -y docker-ce-cli=$DOCKER_VERSION~$DEBIAN_CODENAME
 
 # Cleanup
 RUN apt-get remove --purge -y curl unzip && \
