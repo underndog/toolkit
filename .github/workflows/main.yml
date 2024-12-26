@@ -32,6 +32,19 @@ jobs:
           file: ./terraform-kubectl/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
+      - name: Login to quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_IO_USERNAME }}
+          password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
+      - name: Build and push to quay.io
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./node_kicker/Dockerfile
+          push: true
+          tags: quay.io/underndog/nodekicker:latest, quay.io/underndog/nodekicker:${{ env.RELEASE_VERSION }}
       - name: Run Trivy vulnerability scanner (CRITICAL)
         uses: aquasecurity/trivy-action@master
         with:
@@ -49,16 +62,4 @@ jobs:
           format: 'table'
           exit-code: '0'
           severity: 'HIGH'
-      - name: Login to quay.io
-        uses: docker/login-action@v3
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_IO_USERNAME }}
-          password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
-      - name: Build and push to quay.io
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./node_kicker/Dockerfile
-          push: true
-          tags: quay.io/underndog/nodekicker:latest, quay.io/underndog/nodekicker:${{ env.RELEASE_VERSION }}
+      
