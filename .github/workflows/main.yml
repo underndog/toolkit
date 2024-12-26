@@ -41,7 +41,7 @@ jobs:
       - name: Build and push to quay.io
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./node_kicker
           file: ./node_kicker/Dockerfile
           push: true
           tags: quay.io/underndog/nodekicker:latest, quay.io/underndog/nodekicker:${{ env.RELEASE_VERSION }}
