@@ -1,3 +1,5 @@
+#!/bin/bash
+
 aws ec2 describe-subnets --subnet-ids $SUBNET_ID --query 'Subnets[*].AvailableIpAddressCount' --region $AWS_REGION --output text
 
 aws ec2 describe-instances --region $AWS_REGION --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].NetworkInterfaces[*].PrivateIpAddresses[*].{PrivateIpAddress:PrivateIpAddress}' --output text | wc -l
