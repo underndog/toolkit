@@ -6,6 +6,33 @@ on:
     tags:
       - '*.*.*'
 jobs:
+  # Job for building and pushing create-kafka-topic image
+  build-create-kafka-topic:
+    runs-on: ubuntu-latest
+    needs: trufflehog
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Login to quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_IO_USERNAME }}
+          password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
+      - name: Build and push "create-kafka-topic" to quay.io
+        uses: docker/build-push-action@v6
+        with:
+          context: ./create-kafka-topic
+          file: ./create-kafka-topic/Dockerfile
+          push: true
+          tags: quay.io/underndog/create-kafka-topic:latest, quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
+      - name: Run Trivy vulnerability scanner For create-kafka-topic (CRITICAL)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
   CI:
     runs-on: ubuntu-latest
     name: terraform-kubectl
@@ -25,24 +52,6 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAY_IO_USERNAME }}
           password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
-      ################Build create-kafka-topic
-      - name: Build and push "create-kafka-topic" to quay.io
-        uses: docker/build-push-action@v6
-        with:
-          context: ./create-kafka-topic
-          file: ./create-kafka-topic/Dockerfile
-          push: true
-          tags: quay.io/underndog/create-kafka-topic:latest, quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
-      - name: Run Trivy vulnerability scanner For create-kafka-topic (CRITICAL)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
-          format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL'
-          #https://github.com/aquasecurity/trivy/issues/4826
-          #skip-files: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service/sts@v1.21.4/api_op_GetAccessKeyInfo.go'
-          #skip-dirs: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service'
       ################END Build create-kafka-topic
       - name: Login to Docker Hub
         uses: docker/login-action@v3
