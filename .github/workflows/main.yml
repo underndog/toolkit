@@ -18,20 +18,7 @@ jobs:
           docker run -v ${{ github.workspace }}:/target dxa4481/trufflehog --entropy=False file:///target
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./terraform-kubectl/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
+      ################Login quay.io
       - name: Login to quay.io
         uses: docker/login-action@v3
         with:
@@ -47,6 +34,21 @@ jobs:
           push: true
           tags: quay.io/underndog/create-kafka-topic:latest, quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
       ################END Build create-kafka-topic
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./terraform-kubectl/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
+      
       - name: Build and push to quay.io
         uses: docker/build-push-action@v6
         with:
