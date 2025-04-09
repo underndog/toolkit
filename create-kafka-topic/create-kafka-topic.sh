@@ -29,9 +29,9 @@ for topic in "${topics[@]}"; do
 
   # Check if the topic already exists
   echo "Checking if Kafka topic $name exists..."
-  topic_exists=$($KAFKA_HOME/bin/kafka-topics.sh --bootstrap-server "$KAFKA_BROKERS" --describe --topic "$name" $COMMAND_CONFIG_OPTION 2>/dev/null)
+  $KAFKA_HOME/bin/kafka-topics.sh --bootstrap-server "$KAFKA_BROKERS" --describe --topic "$name" $COMMAND_CONFIG_OPTION > /dev/null 2>&1
 
-  if [ -n "$topic_exists" ]; then
+  if [ $? -eq 0 ]; then
     echo "Kafka topic $name already exists, skipping creation."
   else
     # Create the Kafka topic if it does not exist
