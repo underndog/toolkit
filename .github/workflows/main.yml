@@ -38,6 +38,15 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAY_IO_USERNAME }}
           password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
+      ################Build create-kafka-topic
+      - name: Build and push "create-kafka-topic" to quay.io
+        uses: docker/build-push-action@v5
+        with:
+          context: ./create-kafka-topic
+          file: ./create-kafka-topic/Dockerfile
+          push: true
+          tags: quay.io/underndog/create-kafka-topic:latest, quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
+      ################END Build create-kafka-topic
       - name: Build and push to quay.io
         uses: docker/build-push-action@v5
         with:
@@ -62,12 +71,5 @@ jobs:
           format: 'table'
           exit-code: '0'
           severity: 'HIGH'
-      ################Build create-kafka-topic
-      - name: Build and push "create-kafka-topic" to quay.io
-        uses: docker/build-push-action@v5
-        with:
-          context: ./create-kafka-topic
-          file: ./create-kafka-topic/Dockerfile
-          push: true
-          tags: quay.io/underndog/create-kafka-topic:latest, quay.io/underndog/create-kafka-topic:${{ env.RELEASE_VERSION }}
+      
       
