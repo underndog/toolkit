@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-topic-creator
+spec:
+  template:
+    spec:
+      containers:
+      - name: kafka-topic-creator
+        image: quay.io/underndog/create-kafka-topic:latest  # Replace with your Docker image name
+        env:
+        - name: KAFKA_BROKERS
+          value: "kafka-broker:9094"  # Replace with your Kafka broker address
+        - name: KAFKA_TOPICS
+          value: "topic1:3:2,topic2:2:3"  # Replace with your list of topics
+        - name: USE_SSL
+          value: "true"  # Set to "true" if you want to use SSL
+      restartPolicy: OnFailure
+  backoffLimit: 4
