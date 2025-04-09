@@ -78,19 +78,15 @@ jobs:
           #https://github.com/aquasecurity/trivy/issues/4826
           #skip-files: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service/sts@v1.21.4/api_op_GetAccessKeyInfo.go'
           #skip-dirs: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service'
-  CI:
+  # Job for building and pushing node_kicker image
+  build-node-kicker:
     runs-on: ubuntu-latest
-    name: terraform-kubectl
+    needs: trufflehog
     steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - name: Run TruffleHog
-        run: |
-          docker pull dxa4481/trufflehog
-          docker run -v ${{ github.workspace }}:/target dxa4481/trufflehog --entropy=False file:///target
       - name: Set env
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      ################Login quay.io
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Login to quay.io
         uses: docker/login-action@v3
         with:
@@ -104,7 +100,13 @@ jobs:
           file: ./node_kicker/Dockerfile
           push: true
           tags: quay.io/underndog/nodekicker:latest, quay.io/underndog/nodekicker:${{ env.RELEASE_VERSION }}
-      
+      - name: Run Trivy vulnerability scanner (CRITICAL)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: quay.io/underndog/nodekicker:${{ env.RELEASE_VERSION }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
       # - name: Run Trivy vulnerability scanner
       #   uses: aquasecurity/trivy-action@master
       #   with:
