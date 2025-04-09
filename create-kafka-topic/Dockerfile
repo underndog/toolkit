@@ -1,10 +1,15 @@
-# Use an official OpenJDK image as a base (Kafka is a Java application)
-FROM openjdk:8-jre-alpine
+# Use an official OpenJDK 17 image as a base
+FROM openjdk:17-jre-slim
 
 # Install dependencies (curl, bash)
-RUN apk add --no-cache bash curl
+RUN apt-get update && apt-get install -y \
+    curl \
+    bash \
+    wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Kafka client tools (now downloading Kafka 4.0.0)
+# Install Kafka client tools (version 4.0.0)
 RUN wget https://dlcdn.apache.org/kafka/4.0.0/kafka_2.13-4.0.0.tgz -O kafka.tgz && \
     tar -xvzf kafka.tgz && \
     mv kafka_2.13-4.0.0 /opt/kafka && \
