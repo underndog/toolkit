@@ -5,11 +5,11 @@ FROM debian:bookworm-slim
 LABEL maintainer="Nimtechnology"
 
 # Set versions for tools to install
-ENV TERRAFORM_VERSION=1.7.5
+ENV TERRAFORM_VERSION=1.11.3
 ##How to check the latest version of kubectl: https://dl.k8s.io/release/stable.txt
-ENV KUBECTL_VERSION=v1.29.3
-# Set Docker version as an environment variable
-ENV DOCKER_VERSION=5:23.0.3~3-0~debian
+ENV KUBECTL_VERSION=v1.32.3
+# # Set Docker version as an environment variable
+# ENV DOCKER_VERSION=5:23.0.3~3-0~debian
 
 # Install necessary utilities and tools
 RUN apt-get update && apt-get install -y \
