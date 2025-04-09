@@ -9,8 +9,8 @@ fi
 # Check if SSL should be used
 SECURITY_PROTOCOL_OPTION=""
 if [ "$USE_SSL" == "true" ]; then
-  SECURITY_PROTOCOL_OPTION="--security-protocol SASL_SSL"  # Use SASL_SSL for MSK
-  echo "Using SASL_SSL for Kafka connection..."
+  SECURITY_PROTOCOL_OPTION="--producer-property security.protocol=SSL"  # Use SSL for Kafka connection
+  echo "Using SSL for Kafka connection..."
 else
   echo "Not using SSL for Kafka connection..."
 fi

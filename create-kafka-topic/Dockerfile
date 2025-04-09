@@ -1,7 +1,7 @@
 # Use an official OpenJDK 17 JDK image as a base
 FROM openjdk:17-jdk-slim
 
-# Install dependencies (curl, bash)
+# Install dependencies (curl, bash, wget)
 RUN apt-get update && apt-get install -y \
     curl \
     bash \
