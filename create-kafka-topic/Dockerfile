@@ -23,5 +23,8 @@ ENV PATH="${KAFKA_HOME}/bin:${PATH}"
 COPY create-kafka-topic.sh /usr/local/bin/create-kafka-topic.sh
 RUN chmod +x /usr/local/bin/create-kafka-topic.sh
 
+# Copy client.properties into the container
+COPY client.properties /usr/local/bin/client.properties
+
 # Set the entrypoint to run the script
 ENTRYPOINT ["/usr/local/bin/create-kafka-topic.sh"]

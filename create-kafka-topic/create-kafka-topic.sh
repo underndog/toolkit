@@ -7,10 +7,10 @@ if [ -z "$KAFKA_BROKERS" ] || [ -z "$KAFKA_TOPICS" ]; then
 fi
 
 # Check if SSL should be used
-SECURITY_PROTOCOL_OPTION=""
+COMMAND_CONFIG_OPTION=""
 if [ "$USE_SSL" == "true" ]; then
-  SECURITY_PROTOCOL_OPTION="--producer-property security.protocol=SSL"  # Use SSL for Kafka connection
-  echo "Using SSL for Kafka connection..."
+  COMMAND_CONFIG_OPTION="--command-config /usr/local/bin/client.properties"  # Use client.properties for SSL configuration
+  echo "Using SSL for Kafka connection using client.properties..."
 else
   echo "Not using SSL for Kafka connection..."
 fi
@@ -40,7 +40,7 @@ for topic in "${topics[@]}"; do
       --replication-factor "$replication_factor" \
       --partitions "$partitions" \
       --topic "$name" \
-      $SECURITY_PROTOCOL_OPTION
+      $COMMAND_CONFIG_OPTION
 
     echo "Kafka topic $name created successfully!"
   fi
