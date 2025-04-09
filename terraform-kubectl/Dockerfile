@@ -4,7 +4,7 @@ FROM debian:bookworm-slim
 # Maintainer and author label
 LABEL maintainer="Nimtechnology"
 
-# Set versions for tools to install
+# Set versions for tools to install: https://releases.hashicorp.com/terraform/
 ENV TERRAFORM_VERSION=1.11.3
 ##How to check the latest version of kubectl: https://dl.k8s.io/release/stable.txt
 ENV KUBECTL_VERSION=v1.32.3
@@ -34,8 +34,8 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     chmod 700 get_helm.sh && \
     ./get_helm.sh
 
-# Install eksctl
-ENV EKSCTL_VERSION=v0.164.0
+# Install eksctl: https://github.com/eksctl-io/eksctl/releases
+ENV EKSCTL_VERSION=v0.207.0
 ENV ARCH=amd64
 RUN PLATFORM=$(uname -s)_$ARCH && \
     curl -sLO "https://github.com/eksctl-io/eksctl/releases/download/$EKSCTL_VERSION/eksctl_$PLATFORM.tar.gz" && \
