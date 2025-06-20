@@ -68,16 +68,6 @@ jobs:
           file: ./terraform-kubectl/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:latest, ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
-      - name: Run Trivy vulnerability scanner (CRITICAL)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
-          format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL'
-          #https://github.com/aquasecurity/trivy/issues/4826
-          #skip-files: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service/sts@v1.21.4/api_op_GetAccessKeyInfo.go'
-          #skip-dirs: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service'
       - name: Login to quay.io
         uses: docker/login-action@v3
         with:
@@ -91,6 +81,16 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: quay.io/underndog/terraform-kubectl-helm-aws-eks:latest, quay.io/underndog/terraform-kubectl-helm-aws-eks:${{ env.RELEASE_VERSION }}
+      - name: Run Trivy vulnerability scanner (CRITICAL)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKER_HUB_USERNAME }}/terraform-kubectl:${{ env.RELEASE_VERSION }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
+          #https://github.com/aquasecurity/trivy/issues/4826
+          #skip-files: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service/sts@v1.21.4/api_op_GetAccessKeyInfo.go'
+          #skip-dirs: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service'
   # Job for building and pushing node_kicker image
   build-node-kicker:
     runs-on: ubuntu-latest
