@@ -78,7 +78,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./terraform-kubectl/Dockerfile
           push: true
           tags: quay.io/underndog/terraform-kubectl-helm-aws-eks:latest, quay.io/underndog/terraform-kubectl-helm-aws-eks:${{ env.RELEASE_VERSION }}
       - name: Run Trivy vulnerability scanner (CRITICAL)
