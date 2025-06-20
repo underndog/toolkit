@@ -78,6 +78,19 @@ jobs:
           #https://github.com/aquasecurity/trivy/issues/4826
           #skip-files: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service/sts@v1.21.4/api_op_GetAccessKeyInfo.go'
           #skip-dirs: '/go/pkg/mod/github.com/aws/aws-sdk-go-v2/service'
+      - name: Login to quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_IO_USERNAME }}
+          password: ${{ secrets.QUAY_IO_ACCESS_TOKEN }}
+      - name: Build and push to quay.io
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: quay.io/underndog/terraform-kubectl-helm-aws-eks:latest, quay.io/underndog/terraform-kubectl-helm-aws-eks:${{ env.RELEASE_VERSION }}
   # Job for building and pushing node_kicker image
   build-node-kicker:
     runs-on: ubuntu-latest
